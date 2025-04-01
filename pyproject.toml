@@ -1,0 +1,16 @@
+[project]
+name = "llm-thing-explainer"
+version = "0.1.0"
+description = "Force LLM to speak in the top 1000 words."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.5.2",
+    "torch>=2.6.0",
+    "transformers>=4.50.3",
+]
+
+[project.optional-dependencies]
+gradio = [
+    "gradio>=5.23.2",
+]

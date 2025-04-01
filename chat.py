@@ -2,20 +2,19 @@ import torch
 from transformers import (AutoModelForCausalLM, AutoTokenizer,
                           LogitsProcessorList)
 
-from reader.xkcd_1000 import read_xkcd_1000
-from src.logits_process import StateMachineLogitsProcessor
-from src.state_machine import TokenStateMachine
-from src.token_list import create_token_lists
+from llm_thing_explainer.reader.xkcd_1000 import read_xkcd_1000
+from llm_thing_explainer.src.logits_process import StateMachineLogitsProcessor
+from llm_thing_explainer.src.state_machine import TokenStateMachine
+from llm_thing_explainer.src.token_list import create_token_lists
 
 model_name = "meta-llama/Llama-3.1-8B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # Step 1: Read the xkcd words file and create the list of token lists
 list_of_token_lists = create_token_lists(tokenizer, read_xkcd_1000())
-token_state_machine = TokenStateMachine(list_of_token_lists)
 
 # Step 3: Initialize the logits processor with the state machine
-state_machine_logits_processor = StateMachineLogitsProcessor(list_of_token_lists)
+state_machine_logits_processor = StateMachineLogitsProcessor(*list_of_token_lists)
 
 # Step 4: Load pre-trained GPT-2 model and tokenizer
 
@@ -27,7 +26,7 @@ logits_processor_list = LogitsProcessorList([state_machine_logits_processor])
 def chat():
     print("Chatbot: Hello! How can I help you today? (type 'exit' to quit)")
 
-    messages = [{"role": "system", "content": "You are a helpful assistant."}]
+    messages = [{"role": "system", "content": "You are a helpful assistant that can only talk in very simple words."}]
 
     while True:
         # User input
@@ -43,8 +42,10 @@ def chat():
         chat_history_ids = model.generate(
             input_ids,
             logits_processor=logits_processor_list,
-            max_new_tokens=512,
+            pad_token_id=tokenizer.eos_token_id,
+            max_new_tokens=256,
             num_beams=5,
+            repetition_penalty=1.5,
         )
 
         # Decode and add the bot's response to messages

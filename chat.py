@@ -1,6 +1,9 @@
+import sys
+from threading import Thread
+
 import torch
 from transformers import (AutoModelForCausalLM, AutoTokenizer,
-                          LogitsProcessorList)
+                          LogitsProcessorList, TextIteratorStreamer)
 
 from llm_thing_explainer.reader.xkcd_1000 import read_xkcd_1000
 from llm_thing_explainer.src.logits_process import StateMachineLogitsProcessor
@@ -9,6 +12,7 @@ from llm_thing_explainer.src.token_list import create_token_lists
 
 model_name = "meta-llama/Llama-3.1-8B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
+streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
 
 # Step 1: Read the xkcd words file and create the list of token lists
 list_of_token_lists = create_token_lists(tokenizer, read_xkcd_1000())
@@ -39,17 +43,46 @@ def chat():
         input_ids = tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
 
         # Generate response
-        chat_history_ids = model.generate(
-            input_ids,
+        generate_kwargs = dict(
+            inputs=input_ids,
+            streamer=streamer,
             logits_processor=logits_processor_list,
-            pad_token_id=tokenizer.eos_token_id,
             max_new_tokens=256,
-            num_beams=5,
+            # do_sample=False,
+            # num_beams=1,
+            # temperature=0.0,
+            # top_k=30,
+            # top_p=30,
             repetition_penalty=1.5,
+            # length_penalty=1.0,
+            # no_repeat_ngram_size=5,
         )
 
+        # chat_history_ids = model.generate(
+        #     input_ids,
+        #     streamer=streamer,
+
+        #     pad_token_id=tokenizer.eos_token_id,
+        #     max_new_tokens=256,
+        #     num_beams=1,
+        #     repetition_penalty=1.5,
+        # )
+
+        def generate_and_signal_complete():
+            model.generate(**generate_kwargs)
+
+        t1 = Thread(target=generate_and_signal_complete)
+        t1.start()
+
+        # Initialize an empty string to store the generated text
+        bot_response = ""
+        for new_text in streamer:
+            bot_response += new_text
+            print(new_text, end="")
+            sys.stdout.flush()
+
         # Decode and add the bot's response to messages
-        bot_response = tokenizer.decode(chat_history_ids[:, input_ids.size(1):][0], skip_special_tokens=True)
+        # bot_response = tokenizer.decode(chat_history_ids[:, input_ids.size(1):][0], skip_special_tokens=True)
         print(f"Chatbot: {bot_response}")
         messages.append({"role": "assistant", "content": bot_response})
 

@@ -1,2 +1,4 @@
+accelerate
+gradio
 torch
 transformers

@@ -50,6 +50,7 @@ def create_token_lists(
     special_token_lists.extend(tokenizer.encode(special_char, add_special_tokens=False) for special_char in special_chars)
     # With prefix space tokens
     prefix_space_word_token_lists.extend(tokenizer.encode(dummy_first_token + ' ' + word, add_special_tokens=False)[1:] for word in words)
+    prefix_space_word_token_lists.extend(tokenizer.encode(word, add_special_tokens=False) for word in words if all(not c.isascii() for c in word))  # add chinese words
     special_token_lists.extend(tokenizer.encode(dummy_first_token + ' ' + special_char, add_special_tokens=False)[1:] for special_char in special_chars)
     # Add special tokens
     special_token_lists.extend([i] for i in tokenizer.all_special_ids)

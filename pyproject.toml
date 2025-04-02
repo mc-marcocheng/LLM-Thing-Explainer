@@ -3,7 +3,10 @@ name = "llm-thing-explainer"
 version = "0.1.0"
 description = "Force LLM to speak in the top 1000 words."
 readme = "README.md"
-requires-python = ">=3.11"
+authors = [
+  { name = "Mc Cheng", email = "no-reply@gmail.com" },
+]
+requires-python = ">=3.8"
 dependencies = [
     "accelerate>=1.5.2",
     "torch>=2.6.0",
@@ -14,3 +17,11 @@ dependencies = [
 gradio = [
     "gradio>=5.23.2",
 ]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["llm_thing_explainer"]

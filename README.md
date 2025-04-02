@@ -1,6 +1,6 @@
 # LLM Thing Explainer
 
-LLM Thing Explainer is inspired by Randall Munroe's ["Thing Explainer: Complicated Stuff in Simple Words"](https://en.wikipedia.org/wiki/Thing_Explainer). This tool uses LLMs to explain complex subjects using only the 1,000 most common English words. By using state machines, this project offers simplified explanations that are accessible to everyone.
+LLM Thing Explainer is inspired by Randall Munroe's ["Thing Explainer: Complicated Stuff in Simple Words"](https://en.wikipedia.org/wiki/Thing_Explainer). This tool uses LLMs to explain complex subjects using only the 1,000 most common English words. By using state machines, this offers simplified explanations that are accessible to everyone.
 
 ## Installation
 
@@ -68,7 +68,7 @@ Logit scores are modified using the `StateMachineLogitsProcessor`. This componen
 
 I have grouped text into 3 categories:
 
-1. Words with no prefix space. e.g. "word"
+1. Words with no prefix space. e.g. "word".
 2. Words with prefix space. e.g. " word". Helps with preventing the concatenation of two words into a new word that is not within our word list.
 3. Punctuations, Digits: special characters.
 

@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
   { name = "Mc Cheng", email = "no-reply@gmail.com" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "accelerate>=1.5.2",
     "torch>=2.6.0",

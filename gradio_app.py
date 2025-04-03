@@ -43,6 +43,7 @@ class LLMLoader:
             top_p: float = 0.95,
             repetition_penalty: float = 1.5,
         ):
+        temperature, top_p, repetition_penalty = float(temperature), float(top_p), float(repetition_penalty)
         # Tokenize user input
         input_ids = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(self.model.device)
         # Prepare LLM Thing Explainer processor
@@ -97,7 +98,7 @@ def add_user_input(messages: list[dict], user_input: str) -> list[dict]:
 
 llm_loader = LLMLoader()
 
-with gr.Blocks(title="LLM Thing Explainer") as demo:
+with gr.Blocks(title="LLM Thing Explainer", analytics_enabled=False) as demo:
     with gr.Tab("Chat"):
         chatbot = gr.Chatbot(label="Thing Explainer", type="messages", height="85vh", autoscroll=True)
         user_input = gr.Textbox(container=False, placeholder="Type your message here...", show_label=False)

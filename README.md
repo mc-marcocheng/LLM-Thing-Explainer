@@ -6,17 +6,35 @@ LLM Thing Explainer is inspired by Randall Munroe's ["Thing Explainer: Complicat
 
 To get started with the LLM Thing Explainer, you first need to install the required dependencies.
 
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/llm-thing-explainer.git
+git clone https://github.com/mc-marcocheng/LLM-Thing-Explainer.git
 cd llm-thing-explainer
+```
+
+2. Install the required packages:
+
+- Option 1 (with `pip`):
+```bash
 pip install -e .[gradio]
+```
+
+- Option 2 (with `uv`):
+```bash
+uv sync --extra gradio
 ```
 
 ## Running the Application
 Once you have completed the installation steps, you can run the application using the following command:
 
+With `pip`:
 ```bash
 python gradio_app.py
+```
+
+or with `uv`:
+```bash
+uv run gradio_app.py
 ```
 
 The application will launch a web interface, which you can access via your browser in `http://localhost:7860`. The interface allows you to chat with the LLM Thing Explainer, adjust model settings, and enjoy simplified explanations of complex topics.
@@ -31,6 +49,7 @@ The application will launch a web interface, which you can access via your brows
 - `chinese 250 chars`: Common Chinese 250 characters.
 - `mandarin 500 chars`: Common Mandarin 500 characters.
 - `mandarin 250 chars`: Common Mandarin 250 characters.
+- `cat sounds`: Cat sounds. Recommended settings: Add numbers = False, Beam Size = 1.
 
 ## Examples
 
@@ -61,6 +80,12 @@ With `chinese 500 chars`:
 > **User:** 真正的幸福是什麼？
 >
 > **Thing Explainer:** 內心平和，身邊有愛。
+
+With `cat sounds`:
+
+> **User:** How are you doing?
+>
+> **Thing Explainer:** "Meow, meow! " (Mew mew - meow' = yowl; Meow=Hiss+Yowl), mew
 
 ## How It Works
 
